@@ -25,13 +25,6 @@ def callback(request):
     token = oauth.auth0.authorize_access_token(request)
     request.session["user"] = token
 
-    # user = User.objects.create_user(
-        # last_update = 'create user',
-        # name = 
-    # )
-
-    print(token)
-
     return redirect(request.build_absolute_uri(reverse("handler")))
 
 def logout(request):
@@ -55,4 +48,4 @@ def handler(request):
     else:
         query = f'logout=true'
         
-    return redirect(f'http://localhost:3000/handler?{query}')
+    return redirect(f'{settings.CLIENT_URL}/handler?{query}')
