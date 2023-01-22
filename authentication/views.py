@@ -3,7 +3,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse
 from urllib.parse import quote_plus, urlencode
-from database.models import User
+from .controllers import user as user_controller
 
 oauth = OAuth()
 oauth.register(
@@ -25,10 +25,17 @@ def callback(request):
     token = oauth.auth0.authorize_access_token(request)
     request.session["user"] = token
 
+    user = user_controller.get_or_create_user(token['userinfo'])
+
+    print(user)
+
     return redirect(request.build_absolute_uri(reverse("handler")))
 
 def logout(request):
-    request.session.clear()
+    try:
+        request.session.clear()
+    except:
+        pass
 
     return redirect(
         f"https://{settings.AUTH0_DOMAIN}/v2/logout?"
