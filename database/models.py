@@ -4,7 +4,7 @@ from django.utils import timezone
 from uuid import uuid4
 
 # X------------X------------X
-# user model
+# users model
 # X------------X------------X
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
@@ -22,14 +22,34 @@ class User(AbstractUser):
     last_update = models.CharField(max_length=100)
 
 # X------------X------------X
-# user-group model
+# trips model
 # X------------X------------X
-class UserGroup(models.Model):
+class Trip(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    
+    name = models.CharField(max_length=100)
+    destination_place = models.TextField(null=True, blank=True)
+    
+    admin = models.ForeignKey(to="database.User", null=True, blank=True, on_delete=models.SET_NULL, related_name="trip_admin")
+    users = models.ManyToManyField(to="database.User", related_name="trip_users")
+
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
     last_update = models.CharField(max_length=100)
+
+# X------------X------------X
+# places model
+# X------------X------------X
+class Place(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     
     name = models.CharField(max_length=100)
-    admin = models.ForeignKey(to="database.User", null=False, blank=False, on_delete=models.CASCADE, related_name="admin")
-    users = models.ManyToManyField(to="database.User", related_name="users")
+    pincode = models.IntegerField()
+    google_map_link = models.TextField()
+    
+    admin = models.ForeignKey(to="database.User", null=True, blank=True, on_delete=models.SET_NULL, related_name="places_admin")
+    users = models.ManyToManyField(to="database.User", related_name="places_users")
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
+    last_update = models.CharField(max_length=100)
