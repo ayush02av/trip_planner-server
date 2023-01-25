@@ -19,7 +19,7 @@ class User(AbstractUser):
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
-    last_update = models.CharField(max_length=100)
+    last_update = models.CharField(max_length=100, default='create')
 
 # X------------X------------X
 # trips model
@@ -31,11 +31,11 @@ class Trip(models.Model):
     destination_place = models.TextField(null=True, blank=True)
     
     admin = models.ForeignKey(to="database.User", null=True, blank=True, on_delete=models.SET_NULL, related_name="trip_admin")
-    users = models.ManyToManyField(to="database.User", related_name="trip_users")
+    users = models.ManyToManyField(to="database.User", related_name="trip_users", blank=True)
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
-    last_update = models.CharField(max_length=100)
+    last_update = models.CharField(max_length=100, default='create')
 
 # X------------X------------X
 # places model
@@ -52,4 +52,4 @@ class Place(models.Model):
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
-    last_update = models.CharField(max_length=100)
+    last_update = models.CharField(max_length=100, default='create')
